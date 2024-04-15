@@ -6,7 +6,10 @@ from datetime import datetime
 
 trackedLinks = { #format: file as key, link as value
     '3090.csv': 'https://www.ebay.ca/sch/i.html?_nkw=rtx+3090&Brand=&_dcat=27386&LH_BIN=1&rt=nc&LH_ItemCondition=1500%7C2010%7C2020%7C1000',
-    'fenderStratocaster.csv': 'https://www.ebay.ca/sch/i.html?_from=R40&_nkw=fender+stratocaster&_sacat=0'
+    '3080.csv': 'https://www.ebay.ca/sch/i.html?_from=R40&_nkw=rtx+3080&_sacat=0&LH_BIN=1&rt=nc&LH_ItemCondition=1000%7C1500%7C2010',
+    'fenderStratocaster.csv': 'https://www.ebay.ca/sch/i.html?_from=R40&_nkw=fender+stratocaster&_sacat=0',
+    'yeezy350.csv': 'https://www.ebay.ca/sch/i.html?_from=R40&_nkw=yeezy+boost+350+zebra&_sacat=15709&US%2520Shoe%2520Size=9&_dcat=15709',
+    'air max 270.csv': 'https://www.ebay.ca/sch/i.html?_from=R40&_nkw=nike+air+max+270&_sacat=15709&LH_ItemCondition=1000&rt=nc&LH_BIN=1&US%2520Shoe%2520Size=9&_dcat=15709'
 }
 
 def getPricesByLink(link):
@@ -24,7 +27,6 @@ def getPricesByLink(link):
             continue
         price = float(priceAsText[3:].replace(',',''))
         itemPrices.append(price)
-    print(itemPrices)
     return itemPrices
 
 def removeOutliers(prices, m=2):
@@ -36,16 +38,16 @@ def getAverage(prices):
 
 def saveToFile(prices, file: str):
     fields = [datetime.today().strftime('%B-%D-%Y'), datetime.now().strftime('%H:%M:%S'), np.around(getAverage(prices), 2)]
+    print('Average Price: ' + str(np.around(getAverage(prices))) + '\n')
     with open(file, 'a', newline = '') as f:
         writer = csv.writer(f)
         writer.writerow(fields)
 
-def checkPrice(link: str, file: str):
+def recordPrice(link: str, file: str):
     prices = getPricesByLink(link)
     pricesWithoutOutliers = removeOutliers(prices)
-    print(getAverage(pricesWithoutOutliers))
     saveToFile(pricesWithoutOutliers, file)
     
 for item in trackedLinks.keys():
     print(item)
-    checkPrice(trackedLinks[item], str(item))
+    recordPrice(trackedLinks[item], str(item))
