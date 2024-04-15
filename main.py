@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 import requests
+import matplotlib.pyplot as plt
 import numpy as np
 import csv
 from datetime import datetime
@@ -51,3 +52,4 @@ def recordPrice(link: str, file: str):
 for item in trackedLinks.keys():
     print(item)
     recordPrice(trackedLinks[item], str(item))
+    
