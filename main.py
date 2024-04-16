@@ -6,16 +6,19 @@ import csv
 from datetime import datetime
 import pandas as pd
 import json
+from json import loads, dumps
 
 f = open('database.json', 'r')
 parsedDict = json.loads(f.read())
 f.close()
+historyDataFrame = pd.read_json
+    
     
 f = open('tracked-links.json', 'r')
 trackedLinks = json.loads(f.read())
 f.close()
 
-print(parsedDict.keys())
+print(str(parsedDict.keys()))
 
 def getPricesByLink(link):
     r = requests.get(link)
@@ -41,15 +44,14 @@ def removeOutliers(prices, m=2):
 def getAverage(prices):
     return np.mean(prices)
 
-def saveToFile(prices, file: str):
+def saveToFile(dataframe):
+    
     fields = [datetime.today().strftime(), datetime.now().strftime('%H:%M:%S'), np.around(getAverage(prices), 2)]
     print('Average Price: ' + str(np.around(getAverage(prices))) + '\n')
     with open(file + '.csv', 'a', newline = '') as f:
         writer = csv.writer(f)
         writer.writerow(fields)
 
-
-    
 
 masterFrame = pd.DataFrame()
 
@@ -80,6 +82,11 @@ print(masterFrame)
 masterFrame.plot.hist(bins=30, alpha=0.5)
 plt.show()
 
+s = open('database.json', 'w')
+result = masterFrame.to_json()
+parsed = loads(result)
+s.write(dumps(parsed, indent = 4))
+s.close()
 
 s = open('tracked-links.json', 'w')
 linkJson = json.dumps(trackedLinks)
