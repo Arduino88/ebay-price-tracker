@@ -14,9 +14,9 @@ f.close()
   
 
 d = {
-    'date': [],
-    'product': [],
-    'meanPrice': []
+    'date': {},
+    'product': {},
+    'meanPrice': {}
 }  
 #parsedDict = d
     
@@ -24,7 +24,7 @@ f = open('tracked-links.json', 'r')
 trackedLinks = json.loads(f.read())
 f.close()
 
-print(str(parsedDict.keys()))
+masterFrame = pd.DataFrame()
 
 def getPricesByLink(link):
     r = requests.get(link)
@@ -50,7 +50,7 @@ def removeOutliers(prices, m=2):
 def getAverage(prices):
     return np.mean(prices)
 
-def saveToFile(dataframe):
+def saveToFile(dataframe): # depreciated
     
     fields = [datetime.today().strftime(), datetime.now().strftime('%H:%M:%S'), np.around(getAverage(prices), 2)]
     print('Average Price: ' + str(np.around(getAverage(prices))) + '\n')
@@ -58,14 +58,14 @@ def saveToFile(dataframe):
         writer = csv.writer(f)
         writer.writerow(fields)
 
-
 def writeToDict(product, meanPrice):
-    print(parsedDict)
-    parsedDict['date'].append(datetime.now())
-    parsedDict['product'].append(product)
-    parsedDict['meanPrice'].append(meanPrice)
+    dictKey = str(len(parsedDict['date'].keys()))
+    parsedDict['date'][dictKey] = datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S")
+    parsedDict['product'][dictKey] = product
+    parsedDict['meanPrice'][dictKey] = round(meanPrice, 2)
 
-masterFrame = pd.DataFrame()
+
+
 
 for product in trackedLinks.keys():
     
@@ -99,11 +99,9 @@ plt.show()
 saveData = pd.DataFrame(data=parsedDict) #temporary
 saveData.set_index('date')
 
-print(datetime.now())
-
-
-print(parsedDict)
 print(saveData)
+
+
 
 
 s = open('database.json', 'w')
