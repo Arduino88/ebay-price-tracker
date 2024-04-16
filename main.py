@@ -2,16 +2,33 @@ from bs4 import BeautifulSoup
 import requests
 import matplotlib.pyplot as plt
 import numpy as np
-import csv
 from datetime import datetime
+import pandas as pd
+import json
+from json import loads, dumps
 
-trackedLinks = { #format: file as key, link as value
-    '3090.csv': 'https://www.ebay.ca/sch/i.html?_nkw=rtx+3090&Brand=&_dcat=27386&LH_BIN=1&rt=nc&LH_ItemCondition=1500%7C2010%7C2020%7C1000',
-    '3080.csv': 'https://www.ebay.ca/sch/i.html?_from=R40&_nkw=rtx+3080&_sacat=0&LH_BIN=1&rt=nc&LH_ItemCondition=1000%7C1500%7C2010',
-    'fenderStratocaster.csv': 'https://www.ebay.ca/sch/i.html?_from=R40&_nkw=fender+stratocaster&_sacat=0',
-    'yeezy350.csv': 'https://www.ebay.ca/sch/i.html?_from=R40&_nkw=yeezy+boost+350+zebra&_sacat=15709&US%2520Shoe%2520Size=9&_dcat=15709',
-    'air max 270.csv': 'https://www.ebay.ca/sch/i.html?_from=R40&_nkw=nike+air+max+270&_sacat=15709&LH_ItemCondition=1000&rt=nc&LH_BIN=1&US%2520Shoe%2520Size=9&_dcat=15709'
-}
+d = { #starter dictionary for database.json
+    "1996retroNuptseBlack": {}, 
+     "3090": {}, 
+     "3080": {}, 
+     "fenderStratocaster": {}, 
+     "yeezy350": {}, 
+     "air max 270": {}
+}  
+
+f = open('database.json', 'r')
+parsedDict = json.loads(f.read())
+f.close()
+  
+dictKey = datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S")
+
+#parsedDict = d
+
+f = open('tracked-links.json', 'r')
+trackedLinks = json.loads(f.read())
+f.close()
+
+masterFrame = pd.DataFrame()
 
 def getPricesByLink(link):
     r = requests.get(link)
@@ -37,19 +54,45 @@ def removeOutliers(prices, m=2):
 def getAverage(prices):
     return np.mean(prices)
 
-def saveToFile(prices, file: str):
-    fields = [datetime.today().strftime('%B-%D-%Y'), datetime.now().strftime('%H:%M:%S'), np.around(getAverage(prices), 2)]
-    print('Average Price: ' + str(np.around(getAverage(prices))) + '\n')
-    with open(file, 'a', newline = '') as f:
-        writer = csv.writer(f)
-        writer.writerow(fields)
+def writeToDict(product, meanPrice):
+    parsedDict[product][dictKey] = round(meanPrice, 2)
 
-def recordPrice(link: str, file: str):
-    prices = getPricesByLink(link)
+for product in parsedDict.keys():
+    
+    print(product)
+    
+    prices = getPricesByLink(trackedLinks[product])
     pricesWithoutOutliers = removeOutliers(prices)
-    saveToFile(pricesWithoutOutliers, file)
     
-for item in trackedLinks.keys():
-    print(item)
-    recordPrice(trackedLinks[item], str(item))
+    listings = pd.Series(pricesWithoutOutliers)
+    listings = listings.sort_values(kind='mergesort', ignore_index=True)
     
+    maximum = listings.max()
+    minimum = listings.min()
+    
+    writeToDict(product, listings.mean())
+    masterFrame.insert(0, product, listings)
+    
+print(masterFrame)
+masterFrame.plot.hist(bins=30, alpha=0.5)
+plt.show()
+
+masterFrame.plot(kind='box')
+
+saveData = pd.DataFrame(data=parsedDict) #temporary
+
+print(saveData)
+
+saveData.plot(subplots=True)
+plt.show()
+
+s = open('database.json', 'w')
+result = saveData.to_json()
+parsed = loads(result)
+s.write(dumps(parsed, indent = 4))
+s.close()
+
+s = open('tracked-links.json', 'w')
+linkJson = json.dumps(trackedLinks)
+s.write(linkJson)
+s.close()
