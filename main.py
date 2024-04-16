@@ -12,11 +12,15 @@ f = open('database.json', 'r')
 parsedDict = json.loads(f.read())
 f.close()
   
+dictKey = datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S")
 
 d = {
-    'date': {},
-    'product': {},
-    'meanPrice': {}
+    "1996retroNuptseBlack": {}, 
+     "3090": {}, 
+     "3080": {}, 
+     "fenderStratocaster": {}, 
+     "yeezy350": {}, 
+     "air max 270": {}
 }  
 #parsedDict = d
     
@@ -59,15 +63,14 @@ def saveToFile(dataframe): # depreciated
         writer.writerow(fields)
 
 def writeToDict(product, meanPrice):
-    dictKey = str(len(parsedDict['date'].keys()))
-    parsedDict['date'][dictKey] = datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S")
-    parsedDict['product'][dictKey] = product
-    parsedDict['meanPrice'][dictKey] = round(meanPrice, 2)
+    #parsedDict['date'][dictKey] = datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S")
+    parsedDict[product][dictKey] = round(meanPrice, 2)
+    #parsedDict['meanPrice'][dictKey] = 
 
 
 
 
-for product in trackedLinks.keys():
+for product in parsedDict.keys():
     
     #dfHistory = pd.read_csv(product + '.csv', index_col='date', parse_dates=['date'])
     
@@ -97,11 +100,11 @@ masterFrame.plot.hist(bins=30, alpha=0.5)
 plt.show()
 
 saveData = pd.DataFrame(data=parsedDict) #temporary
-saveData.set_index('date')
 
 print(saveData)
 
-
+saveData.plot(subplots=True)
+plt.show()
 
 
 s = open('database.json', 'w')
