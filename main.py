@@ -11,8 +11,14 @@ from json import loads, dumps
 f = open('database.json', 'r')
 parsedDict = json.loads(f.read())
 f.close()
-historyDataFrame = pd.read_json
-    
+  
+
+d = {
+    'date': [],
+    'product': [],
+    'meanPrice': []
+}  
+#parsedDict = d
     
 f = open('tracked-links.json', 'r')
 trackedLinks = json.loads(f.read())
@@ -53,6 +59,12 @@ def saveToFile(dataframe):
         writer.writerow(fields)
 
 
+def writeToDict(product, meanPrice):
+    print(parsedDict)
+    parsedDict['date'].append(datetime.now())
+    parsedDict['product'].append(product)
+    parsedDict['meanPrice'].append(meanPrice)
+
 masterFrame = pd.DataFrame()
 
 for product in trackedLinks.keys():
@@ -60,7 +72,7 @@ for product in trackedLinks.keys():
     #dfHistory = pd.read_csv(product + '.csv', index_col='date', parse_dates=['date'])
     
     
-    #print(product)
+    print(product)
     
     prices = getPricesByLink(trackedLinks[product])
     pricesWithoutOutliers = removeOutliers(prices)
@@ -71,19 +83,31 @@ for product in trackedLinks.keys():
     #saveToFile(pricesWithoutOutliers, product)
     maximum = listings.max()
     minimum = listings.min()
+    
+    writeToDict(product, listings.mean())
+    
     #print(listings)
     #print('max: ' + '%.2f' % maximum + ', min: ' + '%.2f' % minimum + ', mean: ' + '%.2f' % listings.mean())
     #histogram(listings, product)
     masterFrame.insert(0, product, listings)
     
-    
-       
+
 print(masterFrame)
 masterFrame.plot.hist(bins=30, alpha=0.5)
 plt.show()
 
+saveData = pd.DataFrame(data=parsedDict) #temporary
+saveData.set_index('date')
+
+print(datetime.now())
+
+
+print(parsedDict)
+print(saveData)
+
+
 s = open('database.json', 'w')
-result = masterFrame.to_json()
+result = saveData.to_json()
 parsed = loads(result)
 s.write(dumps(parsed, indent = 4))
 s.close()
