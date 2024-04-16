@@ -5,13 +5,19 @@ import numpy as np
 import csv
 from datetime import datetime
 import pandas as pd
+import json
 
+f = open('database.json', 'r')
+jsonString = f.read()
+parsedDict = json.loads(jsonString)
+f.close()
+    
 trackedLinks = { #format: file as key, link as value
     '1996retroNuptseBlack': 'https://www.ebay.ca/sch/i.html?_from=R40&_nkw=north+face+1996+retro+neptuse+black&_sacat=57988&LH_BIN=1&rt=nc&LH_ItemCondition=1000&_ipg=120',
-    '3090': 'https://www.ebay.ca/sch/i.html?_nkw=rtx+3090&Brand=&_dcat=27386&LH_BIN=1&rt=nc&LH_ItemCondition=1500%7C2010%7C2020%7C1000&_ipg=60',
-    '3080': 'https://www.ebay.ca/sch/i.html?_from=R40&_nkw=rtx+3080&_sacat=0&LH_BIN=1&rt=nc&LH_ItemCondition=1000%7C1500%7C2010',
-    'fenderStratocaster': 'https://www.ebay.ca/sch/i.html?_from=R40&_nkw=fender+stratocaster&_sacat=0',
-    'yeezy350': 'https://www.ebay.ca/sch/i.html?_from=R40&_nkw=yeezy+boost+350+zebra&_sacat=15709&US%2520Shoe%2520Size=9&_dcat=15709',
+    '3090': 'https://www.ebay.ca/sch/i.html?_nkw=rtx+3090&Brand=&_dcat=27386&LH_BIN=1&rt=nc&LH_ItemCondition=1500%7C2010%7C2020%7C1000&_ipg=120',
+    '3080': 'https://www.ebay.ca/sch/i.html?_from=R40&_nkw=rtx+3080&_sacat=0&LH_BIN=1&rt=nc&LH_ItemCondition=1000%7C1500%7C2010&_ipg=120',
+    #'fenderStratocaster': 'https://www.ebay.ca/sch/i.html?_from=R40&_nkw=fender+stratocaster&_sacat=0&LH_BIN=1&rt=nc&LH_PrefLoc=1',
+    'yeezy350': 'https://www.ebay.ca/sch/i.html?_from=R40&_nkw=yeezy+boost+350+zebra&_sacat=15709&US%2520Shoe%2520Size=9&_dcat=15709&_ipg=120',
     'air max 270': 'https://www.ebay.ca/sch/i.html?_from=R40&_nkw=nike+air+max+270&_sacat=15709&LH_ItemCondition=1000&rt=nc&LH_BIN=1&US%2520Shoe%2520Size=9&_dcat=15709',
 }
 
@@ -46,9 +52,8 @@ def saveToFile(prices, file: str):
         writer = csv.writer(f)
         writer.writerow(fields)
 
-def histogram(data, title: str):
-    plot = listings.plot.hist(title=title, bins=30)
-    plt.show()
+
+    
 
 masterFrame = pd.DataFrame()
 
@@ -74,6 +79,7 @@ for product in trackedLinks.keys():
     masterFrame.insert(0, product, listings)
     
     
-    
-histogram(masterFrame, 'Master')    
+       
 print(masterFrame)
+masterFrame.plot.hist(bins=30, alpha=0.5)
+plt.show()
