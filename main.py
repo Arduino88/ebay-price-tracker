@@ -68,8 +68,6 @@ def writeToDict(product, meanPrice):
     #parsedDict['meanPrice'][dictKey] = 
 
 
-
-
 for product in parsedDict.keys():
     
     #dfHistory = pd.read_csv(product + '.csv', index_col='date', parse_dates=['date'])
@@ -98,6 +96,8 @@ for product in parsedDict.keys():
 print(masterFrame)
 masterFrame.plot.hist(bins=30, alpha=0.5)
 plt.show()
+
+masterFrame.plot(kind='box')
 
 saveData = pd.DataFrame(data=parsedDict) #temporary
 
