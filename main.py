@@ -16,6 +16,11 @@ d = { #starter dictionary for database.json, this needs to be tested
      "air max 270": {}
 }  
 
+tempData = pd.read_csv('database.csv', parse_dates=['Date'])
+tempData.set_index('Date')
+print(tempData)
+
+
 f = open('database.json', 'r')
 parsedDict = json.loads(f.read())
 f.close()
@@ -79,7 +84,13 @@ plt.show()
 
 masterFrame.plot(kind='box')
 
+#tempData=pd.DataFrame(data=pd.to_datetime(parsedDict)) # double temporary lmfao
+
+
+
 saveData = pd.DataFrame(data=parsedDict) #temporary
+
+saveData.index.rename('Date')
 
 print(saveData)
 
@@ -96,3 +107,6 @@ s = open('tracked-links.json', 'w')
 linkJson = json.dumps(trackedLinks)
 s.write(linkJson)
 s.close()
+
+
+saveData.to_csv('database.csv', mode='w', date_format='%s')
