@@ -4,10 +4,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 from datetime import datetime
 import pandas as pd
-import json
+import json #does this need to be stated twice?
 from json import loads, dumps
 
-d = { #starter dictionary for database.json
+d = { #starter dictionary for database.json, this needs to be tested
     "1996retroNuptseBlack": {}, 
      "3090": {}, 
      "3080": {}, 
@@ -89,7 +89,7 @@ plt.show()
 s = open('database.json', 'w')
 result = saveData.to_json()
 parsed = loads(result)
-s.write(dumps(parsed, indent = 4))
+s.write(dumps(parsed, indent=4))
 s.close()
 
 s = open('tracked-links.json', 'w')
