@@ -24,6 +24,10 @@ except ValueError:
 items = database['Item'].unique().tolist()
 print('ITEMS: ' + str(items))
 
+#initialize master_frame
+master_frame = pd.DataFrame(columns=items)
+print(master_frame)
+
 with open('tracked-links.json', 'r') as f:
     trackedLinks = json.loads(f.read())
 
@@ -52,6 +56,28 @@ def getAverage(prices: list) -> float:
     return np.mean(prices)
 
 
+
+for item in trackedLinks.keys():
+    print(item)
+    prices = getPricesByLink(trackedLinks[item])
+    listings = pd.Series(removeOutliers(prices))
+    listings.sort_values(kind='mergesort', ignore_index=True)   # Sort listings
+    maximum = listings.max()
+    minimum = listings.min()
+    averagePrice = getAverage(listings)
+    new_row_df = pd.DataFrame([{'Date': datetime.now(), 'Item': item, 'AveragePrice': averagePrice}])
+    database = pd.concat([database, new_row_df], ignore_index=True)
+    
+    master_frame[item] = listings
+    print(master_frame)
+
+print(database)
+
+
+
+# Assuming 'database' is your DataFrame and 'Date' and 'AveragePrice' are the columns you want to plot
+database = pd.read_csv(database_file)
+
 plt.figure(figsize=(10, 6))  # Set the figure size
 
 for item in database['Item'].unique():
@@ -69,6 +95,19 @@ plt.ylabel('Average Price')  # Set the y-axis label
 plt.title('Line Graph of Average Prices by Item over Time')  # Set the title
 plt.legend()  # Add a legend
 plt.show()  # Show the plot
+
+# Assuming 'master_frame' is your DataFrame
+for item in master_frame.columns.to_list():
+    # Create a new figure for each histogram
+    fig, ax = plt.subplots()
+    
+    # Plot the histogram
+    ax.hist(master_frame[item], bins=30, alpha=0.5)
+    plt.title(item +' Market Overview')
+    # Show the histogram
+    plt.show()
+
+
 
 with open(database_file, 'w', newline='') as f:
     database.to_csv(f, index=False)
