@@ -4,16 +4,24 @@ import matplotlib.pyplot as plt
 import numpy as np
 from datetime import datetime
 import pandas as pd
-import json #does this need to be stated twice?
-from json import loads, dumps
+import json
+from json import loads
 
-#import data from database.csv as dataframe
-database = pd.read_csv('database.csv')
-database.set_index('date')
+database_file = 'database.csv'
 
-# Initialize master frame
-masterFrame = pd.DataFrame(columns=['date', 'averagePrice', 'item'])
-items = masterFrame['item'].unique().tolist()
+# Define the input and output CSV file names (same in this case)
+
+try:
+    # Attempt to read the existing CSV file
+    database = pd.read_csv(database_file)
+    print('case 1')
+except ValueError:
+    # If the CSV file does not exist, create an empty DataFrame
+    database = pd.DataFrame(columns=['Date', 'Item', 'AveragePrice'])
+    print('case 2')
+
+items = database['Item'].unique().tolist()
+print('ITEMS: ' + str(items))
 
 with open('tracked-links.json', 'r') as f:
     trackedLinks = json.loads(f.read())
@@ -42,28 +50,29 @@ def removeOutliers(prices: list, m=2) -> list:
 def getAverage(prices: list) -> float:
     return np.mean(prices)
 
-def writeToDataFrame(product, meanPrice):
-    masterFrame.loc[product] = [meanPrice]
-
-for item in items:
+for item in trackedLinks.keys():
     print(item)
     
     prices = getPricesByLink(trackedLinks[item])
     pricesWithoutOutliers = removeOutliers(prices)
     
     listings = pd.Series(pricesWithoutOutliers)
-    listings.sort_values(kind='mergesort', ignore_index=True)  # Sort listings
+    listings.sort_values(ignore_index=True)  # Sort listings
     maximum = listings.max()
     minimum = listings.min()
     
-    writeToDataFrame(item, getAverage(listings))
-    masterFrame[item] = listings
 
-print(masterFrame)
+    database[item] = listings
 
-# Save master frame to CSV file
-masterFrame.to_csv('database.csv', mode='w')
+print(database)
+
+with open(database_file, 'w', newline='') as f:
+    database.to_csv(f, index=False)
+    print("Data written to", database_file)
 
 # Load master frame from CSV file (for testing purposes)
-loadedMasterFrame = pd.read_csv('database.csv')
-print(loadedMasterFrame)
+#try:
+#    loadedMasterFrame = pd.read_csv(database_file)
+#    print(loadedMasterFrame)
+#except pd.errors.EmptyDataError:
+#    print("No data found in ", database_file)
