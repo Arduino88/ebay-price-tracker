@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 import numpy as np
 from datetime import datetime
 import pandas as pd
@@ -50,21 +51,24 @@ def removeOutliers(prices: list, m=2) -> list:
 def getAverage(prices: list) -> float:
     return np.mean(prices)
 
-for item in trackedLinks.keys():
-    print(item)
-    
-    prices = getPricesByLink(trackedLinks[item])
-    pricesWithoutOutliers = removeOutliers(prices)
-    
-    listings = pd.Series(pricesWithoutOutliers)
-    listings.sort_values(ignore_index=True)  # Sort listings
-    maximum = listings.max()
-    minimum = listings.min()
-    
 
-    database[item] = listings
+plt.figure(figsize=(10, 6))  # Set the figure size
 
-print(database)
+for item in database['Item'].unique():
+    item_df = database[database['Item'] == item]
+
+    plt.plot([datetime.strptime(date, '%Y-%m-%d %H:%M:%S.%f') for date in item_df['Date']], item_df['AveragePrice'], label=item)
+
+# Format the x-axis with dates
+date_formatter = mdates.DateFormatter('%Y-%m-%d')
+plt.gca().xaxis.set_major_formatter(date_formatter)
+plt.gcf().autofmt_xdate()
+
+plt.xlabel('Date')  # Set the x-axis label
+plt.ylabel('Average Price')  # Set the y-axis label
+plt.title('Line Graph of Average Prices by Item over Time')  # Set the title
+plt.legend()  # Add a legend
+plt.show()  # Show the plot
 
 with open(database_file, 'w', newline='') as f:
     database.to_csv(f, index=False)
