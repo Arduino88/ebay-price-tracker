@@ -16,22 +16,22 @@ d = { #starter dictionary for database.json, this needs to be tested
      "air max 270": {}
 }  
 
-tempData = pd.read_csv('database.csv', parse_dates=['Date'])
-tempData.set_index('Date')
-print(tempData)
+#tempData = pd.read_csv('database.csv', parse_dates=['Date'])
+#tempData.set_index('Date')
+#print(tempData)
 
 
-f = open('database.json', 'r')
-parsedDict = json.loads(f.read())
-f.close()
+with open('database.json', 'r') as f:
+    parsedDict = json.loads(f.read())
+
   
 dictKey = datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S")
 
 #parsedDict = d
 
-f = open('tracked-links.json', 'r')
-trackedLinks = json.loads(f.read())
-f.close()
+with open('tracked-links.json', 'r') as f:
+    trackedLinks = json.loads(f.read())
+
 
 masterFrame = pd.DataFrame()
 
@@ -76,7 +76,7 @@ for product in parsedDict.keys():
     minimum = listings.min()
     
     writeToDict(product, listings.mean())
-    masterFrame.insert(0, product, listings)
+    masterFrame[product] = listings
     
 print(masterFrame)
 masterFrame.plot.hist(bins=30, alpha=0.5)
@@ -90,7 +90,7 @@ masterFrame.plot(kind='box')
 
 saveData = pd.DataFrame(data=parsedDict) #temporary
 
-saveData.index.rename('Date')
+#saveData.index.rename('Date')
 
 print(saveData)
 
