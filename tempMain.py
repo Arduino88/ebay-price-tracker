@@ -23,6 +23,8 @@ except ValueError:
 
 items = database['Item'].unique().tolist()
 print('ITEMS: ' + str(items))
+print('DATABASE LOADED: ' + str(database))
+
 
 #initialize master_frame
 master_frame = pd.DataFrame(columns=items)
@@ -76,14 +78,13 @@ print(database)
 
 
 # Assuming 'database' is your DataFrame and 'Date' and 'AveragePrice' are the columns you want to plot
-database = pd.read_csv(database_file)
 
 plt.figure(figsize=(10, 6))  # Set the figure size
 
 for item in database['Item'].unique():
     item_df = database[database['Item'] == item]
 
-    plt.plot([datetime.strptime(date, '%Y-%m-%d %H:%M:%S.%f') for date in item_df['Date']], item_df['AveragePrice'], label=item)
+    plt.plot([datetime.strptime(str(date), '%Y-%m-%d %H:%M:%S.%f') for date in item_df['Date']], item_df['AveragePrice'], label=item)
 
 # Format the x-axis with dates
 date_formatter = mdates.DateFormatter('%Y-%m-%d')
@@ -96,6 +97,9 @@ plt.title('Line Graph of Average Prices by Item over Time')  # Set the title
 plt.legend()  # Add a legend
 plt.show()  # Show the plot
 
+
+
+
 # Assuming 'master_frame' is your DataFrame
 for item in master_frame.columns.to_list():
     # Create a new figure for each histogram
@@ -104,6 +108,8 @@ for item in master_frame.columns.to_list():
     # Plot the histogram
     ax.hist(master_frame[item], bins=30, alpha=0.5)
     plt.title(item +' Market Overview')
+    plt.xlabel('Price')
+    plt.ylabel('# Listings')
     # Show the histogram
     plt.show()
 
