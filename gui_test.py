@@ -1,6 +1,8 @@
 from PyQt6.QtWidgets import QApplication, QWidget, QMainWindow, QPushButton
 from PyQt6.QtCore import QSize, Qt
 
+
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
