@@ -117,9 +117,3 @@ with open(database_file, 'w', newline='') as f:
     database.to_csv(f, index=False)
     print("Data written to", database_file)
 
-# Load master frame from CSV file (for testing purposes)
-#try:
-#    loadedMasterFrame = pd.read_csv(database_file)
-#    print(loadedMasterFrame)
-#except pd.errors.EmptyDataError:
-#    print("No data found in ", database_file)

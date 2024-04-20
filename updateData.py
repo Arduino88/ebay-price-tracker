@@ -9,6 +9,7 @@ import json
 from json import loads
 
 database_file = 'database.csv'
+master_frame_file ='master_frame.csv'
 
 try:
     # Attempt to read the existing CSV file
@@ -69,4 +70,17 @@ for item in trackedLinks.keys():
 
 with open(database_file, 'w', newline='') as f:
     database.to_csv(f, index=False)
-    print("Data written to", database_file + '.')
+    print("Average price data written to", database_file + '.')
+    
+with open(master_frame_file, 'w', newline='') as f:
+    master_frame.to_csv(f, index=False)
+    print("Masterframe written to", master_frame_file + '.')
+
+print(master_frame)
+
+# Load master frame from CSV file (for testing purposes)
+try:
+    loadedMasterFrame = pd.read_csv(master_frame_file)
+    print(loadedMasterFrame)
+except pd.errors.EmptyDataError:
+    print("No data found in ", master_frame_file)
