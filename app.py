@@ -6,18 +6,23 @@ from PyQt6 import QtCore, QtWidgets
 
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 from matplotlib.figure import Figure
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+from datetime import datetime
 
 import pandas as pd
 
 database_file = 'database.csv'
 master_frame_file ='master_frame.csv'
 
+# LOAD TRACKED LINKS
 with open('tracked-links.json', 'r') as f:
     trackedLinks = json.loads(f.read())
     
 print('Tracked links loaded.')
 #print(trackedLinks) #debug line
 
+# LOAD DATABASE
 try:
     # Attempt to read the existing CSV file
     database = pd.read_csv(database_file)
@@ -28,6 +33,7 @@ except ValueError:
 print('Database loaded.')
 #print(database) #debug line
 
+# LOAD MASTER FRAME
 try:
     # Attempt to read the existing CSV file
     master_frame = pd.read_csv(master_frame_file)
@@ -38,6 +44,7 @@ print('Master frame loaded.')
 #print(master_frame) #debug line
 
 items = database['Item'].unique().tolist()
+
 
 class MplCanvas(FigureCanvasQTAgg):
 
@@ -61,11 +68,23 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # plot the pandas DataFrame, passing in the
         # matplotlib Canvas axes.
-        master_frame.plot(ax=sc.axes, kind='hist')
+        for item in database['Item'].unique():
+            item_df = database[database['Item'] == item]
+            plt.plot([datetime.strptime(str(date), '%Y-%m-%d %H:%M:%S.%f') for date in item_df['Date']], item_df['AveragePrice'], label=item)
+        
+        
+            item_df.plot(
+                ax=sc.axes,
+                kind='line',
+                xlabel='Date',
+                ylabel='Average Price',
+                subplots=True,
+                legend=False,
+                title='Item Prices'
+                )
 
         self.setCentralWidget(sc)
         self.show()
-
 
 app = QtWidgets.QApplication(sys.argv)
 w = MainWindow()
