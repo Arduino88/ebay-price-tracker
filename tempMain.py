@@ -9,7 +9,7 @@ import json
 from json import loads
 
 database_file = 'database.csv'
-
+ 
 try:
     # Attempt to read the existing CSV file
     database = pd.read_csv(database_file)
