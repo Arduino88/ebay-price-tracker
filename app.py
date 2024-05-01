@@ -12,11 +12,11 @@ from datetime import datetime
 
 import pandas as pd
 
-database_file = 'database.csv'
-master_frame_file ='master_frame.csv'
+database_file = 'ebay-price-tracker/database.csv'
+master_frame_file ='ebay-price-tracker/master_frame.csv'
 
 # LOAD TRACKED LINKS
-with open('tracked-links.json', 'r') as f:
+with open('ebay-price-tracker/tracked-links.json', 'r') as f:
     trackedLinks = json.loads(f.read())
     
 print('Tracked links loaded.')
@@ -59,7 +59,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
 
-        # Create the maptlotlib FigureCanvas object,
+        # Create the matplotlib FigureCanvas object,
         # which defines a single set of axes as self.axes.
         sc = MplCanvas(self, width=5, height=4, dpi=100)
 
