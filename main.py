@@ -9,24 +9,17 @@ from json import loads, dumps
 import os.path
 
 d = { #starter dictionary for database.json, this needs to be tested
-    "1996retroNuptseBlack": {}, 
-     "3090": {}, 
-     "3080": {}, 
-     "fenderStratocaster": {}, 
-     "yeezy350": {}, 
-     "air max 270": {}
+    "airJordan1Size9": {}
 }
 
 #tempData = pd.read_csv('database.csv', parse_dates=['Date'])
 #tempData.set_index('Date')
 #print(tempData)
-
+'''
 if os.path.isfile('database.json'):
     with open('database.json', 'r') as f:
         parsedDict = json.loads(f.read())
   
-    dictKey = datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S")
-
 else:
     raise Exception('database.json not found')
 
@@ -38,7 +31,13 @@ if os.path.isfile('tracked-links.json'):
 
 else:
     raise Exception('tracked-links.json not found')
+'''
 
+dictKey = datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S")
+
+parsedDict = d
+
+trackedLinks = {'airJordan1Size9': 'https://www.ebay.ca/sch/i.html?_nkw=air%20jordan%201&_sacat=0&_from=R40&LH_ItemCondition=1000%7C1500&US%2520Shoe%2520Size=9&_dcat=15709&rt=nc&_stpos=K0L3A0&_sadis=100&LH_PrefLoc=99&_fspt=1'}
 
 masterFrame = pd.DataFrame()
 
@@ -77,7 +76,7 @@ for product in parsedDict.keys():
     pricesWithoutOutliers = removeOutliers(prices)
     
     listings = pd.Series(pricesWithoutOutliers)
-    listings = listings.sort_values(kind='mergesort', ignore_index=True)
+    listings = listings.sort_values(ignore_index=True)
     
     maximum = listings.max()
     minimum = listings.min()
