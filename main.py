@@ -6,6 +6,7 @@ from datetime import datetime
 import pandas as pd
 import json #does this need to be stated twice?
 from json import loads, dumps
+import os.path
 
 d = { #starter dictionary for database.json, this needs to be tested
     "1996retroNuptseBlack": {}, 
@@ -14,23 +15,29 @@ d = { #starter dictionary for database.json, this needs to be tested
      "fenderStratocaster": {}, 
      "yeezy350": {}, 
      "air max 270": {}
-}  
+}
 
 #tempData = pd.read_csv('database.csv', parse_dates=['Date'])
 #tempData.set_index('Date')
 #print(tempData)
 
-
-with open('database.json', 'r') as f:
-    parsedDict = json.loads(f.read())
-
+if os.path.isfile('database.json'):
+    with open('database.json', 'r') as f:
+        parsedDict = json.loads(f.read())
   
-dictKey = datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S")
+    dictKey = datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S")
+
+else:
+    raise Exception('database.json not found')
 
 #parsedDict = d
 
-with open('tracked-links.json', 'r') as f:
-    trackedLinks = json.loads(f.read())
+if os.path.isfile('tracked-links.json'):
+    with open('tracked-links.json', 'r') as f:
+        trackedLinks = json.loads(f.read())
+
+else:
+    raise Exception('tracked-links.json not found')
 
 
 masterFrame = pd.DataFrame()
