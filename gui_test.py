@@ -7,7 +7,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         
-        self.setWindowTitle("My App")
+        self.setWindowTitle("Ebay Price Tracker")
         button = QPushButton("Click Me!")
         
         self.setFixedSize(QSize(400, 300))
@@ -20,7 +20,7 @@ class MainWindow(QMainWindow):
 
 
 
-app = QApplication([])
+app = QApplication()
 
 
 window = MainWindow()
