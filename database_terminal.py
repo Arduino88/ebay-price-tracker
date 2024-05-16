@@ -1,5 +1,6 @@
 import pandas as pd
 import json
+import os
 
 # program to iterate through the database and delete data for a select item
 
@@ -11,10 +12,13 @@ with open('tracked-links.json', 'r') as f:
 try:
     # Attempt to read the existing CSV file
     database = pd.read_csv(database_file)
-except ValueError:
+    print('case 1')
+except FileNotFoundError:
     # If the CSV file does not exist, create an empty DataFrame
     database = pd.DataFrame(columns=['Date', 'Item', 'AveragePrice'])
     print('case 2')
+    database.to_csv(database_file, index=False)
+    print('Database not found...\nCreating database...')
 
 items = database['Item'].unique().tolist()
 print('DATABASE LOADED')
@@ -22,7 +26,7 @@ print('Items:', items)
 print('Which item do you want to delete?')
 user_input = input()
 print('Are you sure? (Y/N)')
-if input() == 'Y':
+if input() in ('y', 'Y'):
     if user_input in items:
         print('Deleting', user_input, 'from database.')
         database.drop(database[database['Item'] == user_input].index, inplace=True)

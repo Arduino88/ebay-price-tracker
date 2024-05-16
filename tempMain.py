@@ -104,7 +104,7 @@ for item in master_frame.columns.to_list():
     fig, ax = plt.subplots()
     
     # Plot the histogram
-    ax.hist(master_frame[item], bins=30, alpha=0.5)
+    ax.hist(master_frame[item], bins=20, alpha=0.5)
     plt.title(item +' Market Overview')
     plt.xlabel('Price')
     plt.ylabel('# Listings')
