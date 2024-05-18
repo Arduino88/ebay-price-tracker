@@ -9,7 +9,7 @@ import json
 from json import loads
 
 database_file = 'database.csv'
-master_frame_file ='master_frame.csv'
+master_frame_file = f'readings/master_frame_{datetime.now().strftime("%Y-%m-%d-%H-%M")}.csv'
 
 try:
     # Attempt to read the existing CSV file

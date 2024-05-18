@@ -96,20 +96,21 @@ plt.legend()  # Add a legend
 plt.show()  # Show the plot
 
 
-
-
+fig, (ax1, ax2, ax3) = plt.subplots(1, len(database['Item'].unique()))
 # Assuming 'master_frame' is your DataFrame
-for item in master_frame.columns.to_list():
-    # Create a new figure for each histogram
-    fig, ax = plt.subplots()
-    
+for item, axis in zip(master_frame.columns.to_list(), (ax1, ax2, ax3)):
+
     # Plot the histogram
-    ax.hist(master_frame[item], bins=20, alpha=0.5)
-    plt.title(item +' Market Overview')
-    plt.xlabel('Price')
-    plt.ylabel('# Listings')
-    # Show the histogram
-    plt.show()
+    axis.hist(master_frame[item], bins=20, alpha=0.5)
+    axis.set_xlabel('Price')
+    axis.set_ylabel('# Listings')
+    axis.set_title(item)
+    
+
+
+plt.show()
+
+
 
 
 
