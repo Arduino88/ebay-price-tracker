@@ -96,9 +96,9 @@ plt.legend()  # Add a legend
 plt.show()  # Show the plot
 
 
-fig, (ax1, ax2, ax3) = plt.subplots(1, len(database['Item'].unique()))
+fig, axes = plt.subplots(1, len(database['Item'].unique()))
 # Assuming 'master_frame' is your DataFrame
-for item, axis in zip(master_frame.columns.to_list(), (ax1, ax2, ax3)):
+for item, axis in zip(master_frame.columns.to_list(), axes):
 
     # Plot the histogram
     axis.hist(master_frame[item], bins=20, alpha=0.5)

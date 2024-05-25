@@ -1,7 +1,5 @@
 from bs4 import BeautifulSoup
 import requests
-import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
 import numpy as np
 from datetime import datetime
 import pandas as pd
