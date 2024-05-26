@@ -6,7 +6,6 @@ import numpy as np
 from datetime import datetime
 import pandas as pd
 import json
-from json import loads
 
 database_file = 'database.csv'
  
