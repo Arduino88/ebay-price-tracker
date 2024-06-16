@@ -1,3 +1,6 @@
+## UNFINISHED ##
+
+
 import sys
 import matplotlib
 matplotlib.use('QtAgg')
@@ -12,11 +15,11 @@ from datetime import datetime
 
 import pandas as pd
 
-database_file = 'ebay-price-tracker/database.csv'
-master_frame_file ='ebay-price-tracker/master_frame.csv'
+database_file = 'database.csv'
+master_frame_file ='master_frame.csv'
 
 # LOAD TRACKED LINKS
-with open('ebay-price-tracker/tracked-links.json', 'r') as f:
+with open('tracked-links.json', 'r') as f:
     trackedLinks = json.loads(f.read())
     
 print('Tracked links loaded.')
