@@ -3,3 +3,4 @@
 
 /readings
 *.code-workspace
+/.vscode
