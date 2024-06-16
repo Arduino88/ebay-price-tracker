@@ -18,9 +18,6 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         layout = QtWidgets.QVBoxLayout(self._main)
 
         static_canvas = FigureCanvas(Figure(figsize=(5, 3)))
-        # Ideally one would use self.addToolBar here, but it is slightly
-        # incompatible between PyQt6 and other bindings, so we just add the
-        # toolbar as a plain widget instead.
         layout.addWidget(NavigationToolbar(static_canvas, self))
         layout.addWidget(static_canvas)
 
@@ -52,8 +49,6 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 
 
 if __name__ == "__main__":
-    # Check whether there is already a running QApplication (e.g., if running
-    # from an IDE).
     qapp = QtWidgets.QApplication.instance()
     if not qapp:
         qapp = QtWidgets.QApplication(sys.argv)
