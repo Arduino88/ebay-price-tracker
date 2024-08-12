@@ -105,12 +105,7 @@ for item, axis in zip(master_frame.columns.to_list(), axes):
     axis.set_ylabel('# Listings')
     axis.set_title(item)
     
-
-
 plt.show()
-
-
-
 
 
 with open(database_file, 'w', newline='') as f:
