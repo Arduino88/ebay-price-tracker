@@ -71,21 +71,31 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # plot the pandas DataFrame, passing in the
         # matplotlib Canvas axes.
-        for item in database['Item'].unique():
+        
+        colors = ('red', 'orange', 'green', 'blue', 'purple', 'black')
+        
+        for i, item in enumerate(database['Item'].unique()):
+            i %= len(colors)
             item_df = database[database['Item'] == item]
             plt.plot([datetime.strptime(str(date), '%Y-%m-%d %H:%M:%S.%f') for date in item_df['Date']], item_df['AveragePrice'], label=item)
+            item_df = item_df.rename(columns={'AveragePrice':item})
+            item_df = item_df.drop('Item', axis=1)
         
+            print(item_df)
+
         
             item_df.plot(
                 ax=sc.axes,
                 kind='line',
+                color=colors[i],
                 xlabel='Date',
                 ylabel='Average Price',
                 subplots=True,
-                legend=False,
+                legend=True,
                 title='Item Prices'
                 )
 
+        plt.legend(database['Item'].unique())
         self.setCentralWidget(sc)
         self.show()
 

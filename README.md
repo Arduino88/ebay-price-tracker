@@ -25,4 +25,6 @@ Data analysis and manipulation is done with Pandas, NumPy and Matplotlib.
 
 I am investigating the possibility of creating a script to run updateData.py automatically in the background but have not gotten around to it.
 
+(Some of the code in /examples is not mine. I do not want to give the false impression it is all my code I just needed examples to work with and learn pyqt6)
+
 I hope you like my project, PRs are welcome, I just might take a bit to review them as I am a student :)
