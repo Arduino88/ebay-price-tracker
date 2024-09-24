@@ -4,3 +4,4 @@
 /readings
 *.code-workspace
 /.vscode
+/.venv
